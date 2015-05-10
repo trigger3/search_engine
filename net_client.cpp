@@ -1,8 +1,8 @@
 /*************************************************************************
  *
- * PURPOSE :  HTTP ¿Í»§¶Ë³ÌĞò, »ñÈ¡ÍøÒ³.
+ * PURPOSE :  HTTP å®¢æˆ·ç«¯ç¨‹åº, è·å–ç½‘é¡µ.
  *  
- * AUTHOR  :  ĞíÎÄÃô
+ * AUTHOR  :  LIHUI
  * 
  **************************************************************************/
 #include "stdafx.h"
@@ -10,12 +10,12 @@
 #include <winsock2.h>
 #include "net_client.h"
  
-#pragma comment(lib, "ws2_32.lib")  /* WinSockÊ¹ÓÃµÄ¿âº¯Êı */
+#pragma comment(lib, "ws2_32.lib")  /* WinSockä½¿ç”¨çš„åº“å‡½æ•° */
  
-/* ¶¨Òå³£Á¿ */
-#define HTTP_DEF_PORT     80  /* Á¬½ÓµÄÈ±Ê¡¶Ë¿Ú */
-#define HTTP_BUF_SIZE   1024  /* »º³åÇøµÄ´óĞ¡   */
-#define HTTP_HOST_LEN    256  /* Ö÷»úÃû³¤¶È */
+/* å®šä¹‰å¸¸é‡ */
+#define HTTP_DEF_PORT     80  /* è¿æ¥çš„ç¼ºçœç«¯å£ */
+#define HTTP_BUF_SIZE   1024  /* ç¼“å†²åŒºçš„å¤§å°   */
+#define HTTP_HOST_LEN    256  /* ä¸»æœºåé•¿åº¦ */
  
 char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
 	"Host: %s\r\n"
@@ -33,15 +33,15 @@ char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
 
 /**************************************************************************
  *
- * º¯Êı¹¦ÄÜ: ½âÎöÃüÁîĞĞ²ÎÊı, ·Ö±ğµÃµ½Ö÷»úÃû, ¶Ë¿ÚºÅºÍÎÄ¼şÃû. ÃüÁîĞĞ¸ñÊ½:
+ * å‡½æ•°åŠŸèƒ½: è§£æå‘½ä»¤è¡Œå‚æ•°, åˆ†åˆ«å¾—åˆ°ä¸»æœºå, ç«¯å£å·å’Œæ–‡ä»¶å. å‘½ä»¤è¡Œæ ¼å¼:
  *           [http://www.baidu.com:8080/index.html]
  *
- * ²ÎÊıËµÃ÷: [IN]  buf, ×Ö·û´®Ö¸ÕëÊı×é;
- *           [OUT] host, ±£´æÖ÷»ú;
- *           [OUT] port, ¶Ë¿Ú;
- *           [OUT] file_name, ÎÄ¼şÃû;
+ * å‚æ•°è¯´æ˜: [IN]  buf, å­—ç¬¦ä¸²æŒ‡é’ˆæ•°ç»„;
+ *           [OUT] host, ä¿å­˜ä¸»æœº;
+ *           [OUT] port, ç«¯å£;
+ *           [OUT] file_name, æ–‡ä»¶å;
  *
- * ·µ »Ø Öµ: void.
+ * è¿” å› å€¼: void.
  *
  **************************************************************************/
 
@@ -53,7 +53,7 @@ char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
     char *buf_end = (char *)(buf + strlen(buf));
     char *begin, *host_end, *colon, *file;
  
-    /* ²éÕÒÖ÷»úµÄ¿ªÊ¼Î»ÖÃ */
+    /* æŸ¥æ‰¾ä¸»æœºçš„å¼€å§‹ä½ç½® */
 	printf("hello http_parse_request_url\n");
      
     begin =strstr(buf, "//");
@@ -67,7 +67,7 @@ char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
         host_end = buf_end;
     }
     else
-    {   /* µÃµ½ÎÄ¼şÃû */
+    {   /* å¾—åˆ°æ–‡ä»¶å */
 		//file = strrchr(host_end, '/');
         //if (file && (file + 1) != buf_end)
         //    strcpy(file_name, file + 1);
@@ -75,7 +75,7 @@ char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
 		strcpy(file_name, file );
 	
     }
-    if (colon) /* µÃµ½¶Ë¿ÚºÅ */
+    if (colon) /* å¾—åˆ°ç«¯å£å· */
    {
         colon++;
  
@@ -89,7 +89,7 @@ char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
 	else
 		*port = 80;
  
-    /* µÃµ½Ö÷»úĞÅÏ¢ */
+    /* å¾—åˆ°ä¸»æœºä¿¡æ¯ */
     length = host_end - begin;
     memcpy(host, begin, length);
     host[length] = 0;
@@ -113,7 +113,7 @@ char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
 		exit(0);
 	}
 
-	while((fgets(init_host,1024,file_init_url)) != NULL)//°´ĞĞ¶ÁÈ¡
+	while((fgets(init_host,1024,file_init_url)) != NULL)//æŒ‰è¡Œè¯»å–
 	{
 		init_host[strlen(init_host)-1]='\0';
 		
@@ -122,7 +122,7 @@ char *http_req_hdr_tmpl = "GET %s HTTP/1.1\r\n"
 		strcpy(p1->url,init_host);
 		p1->next = NULL;
 		//p1->next = head;
-		//´øÍ·½ÚµãµÄÎ²²å·¨
+		//å¸¦å¤´èŠ‚ç‚¹çš„å°¾æ’æ³•
 		if(head==NULL)
             head=p1;
         else
@@ -139,8 +139,8 @@ void http_request (char *buff, char *host,
 					unsigned short *port, char *file_name, char *file_name_for_save)
 {
     WSADATA wsa_data;
-    SOCKET  http_sock = 0;         /* socket ¾ä±ú */
-    struct sockaddr_in serv_addr;  /* ·şÎñÆ÷µØÖ· */
+    SOCKET  http_sock = 0;         /* socket å¥æŸ„ */
+    struct sockaddr_in serv_addr;  /* æœåŠ¡å™¨åœ°å€ */
     struct hostent *host_ent;
      
     int result = 0, send_len;
@@ -153,7 +153,7 @@ void http_request (char *buff, char *host,
     FILE *file_web;
  
     //http_parse_request_url(buff, host, port, file_name);
-    WSAStartup(MAKEWORD(2,0), &wsa_data); /* ³õÊ¼»¯ WinSock ×ÊÔ´ */
+    WSAStartup(MAKEWORD(2,0), &wsa_data); /* åˆå§‹åŒ– WinSock èµ„æº */
  
     addr = inet_addr(host);
 	//printf("addr:%f",addr);
@@ -169,28 +169,28 @@ void http_request (char *buff, char *host,
         memcpy(&addr, host_ent->h_addr_list[0], host_ent->h_length);
     }
  
-    /* ·şÎñÆ÷µØÖ· */
+    /* æœåŠ¡å™¨åœ°å€ */
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(*port);
     serv_addr.sin_addr.s_addr = addr;
  
-    http_sock = socket(AF_INET, SOCK_STREAM, 0); /* ´´½¨ socket */
+    http_sock = socket(AF_INET, SOCK_STREAM, 0); /* åˆ›å»º socket */
     result = connect(http_sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
-    if (result == SOCKET_ERROR) /* Á¬½ÓÊ§°Ü */
+    if (result == SOCKET_ERROR) /* è¿æ¥å¤±è´¥ */
     {
         closesocket(http_sock);
         printf("[Web] fail to connect, error = %d\n", WSAGetLastError());
 //        return -1; 
     }
  
-    /* ·¢ËÍ HTTP ÇëÇó */
+    /* å‘é€ HTTP è¯·æ±‚ */
 	
     //send_len = sprintf(data_buf, http_req_hdr_tmpl, file_name, host, *port);
 	send_len = sprintf(data_buf, http_req_hdr_tmpl, file_name, host);
-	printf("request_buf£º\n%s\n",data_buf);
+	printf("request_bufï¼š\n%s\n",data_buf);
     result = send(http_sock, data_buf, send_len, 0);
 	//result = write(http_sock, data_buf, send_len);
-    if (result == SOCKET_ERROR) /* ·¢ËÍÊ§°Ü */
+    if (result == SOCKET_ERROR) /* å‘é€å¤±è´¥ */
     {
         printf("[Web] fail to send, error = %d\n", WSAGetLastError());
         //return -1; 
@@ -198,14 +198,14 @@ void http_request (char *buff, char *host,
  
     file_web = fopen(file_name_for_save, "a+");
      
-    do /* ½ÓÊÕÏìÓ¦²¢±£´æµ½ÎÄ¼şÖĞ */
+    do /* æ¥æ”¶å“åº”å¹¶ä¿å­˜åˆ°æ–‡ä»¶ä¸­ */
     {
         result = recv(http_sock, data_buf, HTTP_BUF_SIZE, 0);
         if (result > 0)
         {
             fwrite(data_buf, 1, result, file_web);
  
-            /* ÔÚÆÁÄ»ÉÏÊä³ö */
+            /* åœ¨å±å¹•ä¸Šè¾“å‡º */
             data_buf[result] = 0;
             printf("%s", data_buf);
         }
